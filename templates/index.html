@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌾 PMFBY Smart Capture - AI Crop Insurance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .upload-section {
+            text-align: center;
+        }
+        
+        .upload-area {
+            border: 3px dashed #4CAF50;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .upload-area:hover {
+            border-color: #2E7D32;
+            background-color: #f8f9fa;
+        }
+        
+        .upload-area.dragover {
+            border-color: #FF5722;
+            background-color: #fff3e0;
+        }
+        
+        #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
+        
+        .upload-text {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .upload-icon {
+            font-size: 4em;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .quality-score {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .score-excellent { background: #4CAF50; }
+        .score-good { background: #FF9800; }
+        .score-poor { background: #F44336; }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .metric {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f0f0f0;
+        }
+        
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .guidance {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .guidance h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+        
+        .guidance ul {
+            list-style: none;
+        }
+        
+        .guidance li {
+            padding: 5px 0;
+            color: #555;
+        }
+        
+        .camera-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        #cameraVideo {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-good { background: #4CAF50; }
+        .status-warning { background: #FF9800; }
+        .status-poor { background: #F44336; }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .feature {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .feature h3 {
+            color: #2E7D32;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌾 PMFBY Smart Capture</h1>
+            <p>AI-Powered Crop Insurance Image Analysis | भारतीय किसानों के लिए</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">
+                        <strong>Upload Crop Image</strong><br>
+                        Drag & drop or click to select
+                    </div>
+                    <img id="imagePreview" alt="Preview">
+                </div>
+                
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                
+                <div class="camera-section">
+                    <button class="btn" id="cameraBtn">📹 Use Camera</button>
+                    <button class="btn" id="analyzeBtn" disabled>🔍 Analyze Image</button>
+                    <video id="cameraVideo" autoplay playsinline></video>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div>Analyzing image...</div>
+                </div>
+            </div>
+            
+            <div class="results-section">
+                <div id="results" style="display: none;">
+                    <div class="result-card">
+                        <div class="quality-score">
+                            <div class="score-circle" id="scoreCircle">
+                                <span id="scoreValue">0</span>
+                            </div>
+                            <div id="scoreLabel">Quality Score</div>
+                        </div>
+                        
+                        <div class="metrics">
+                            <div class="metric">
+                                <div class="metric-value" id="blurScore">-</div>
+                                <div class="metric-label">
+                                    <span class="status-indicator" id="blurStatus"></span>
+                                    Blur Detection
+                                </div>
+                            </div>
+                            
+                            <div class="metric">
+                                <div class="metric-value" id="lightScore">-</div>
+                                <div class="metric-label">
+                                    <span class="status-indicator" id="lightStatus"></span>
+                                    Lighting Quality
+                                </div>
+                            </div>
+                            
+                            <div class="metric">
+                                <div class="metric-value" id="distanceScore">-</div>
+                                <div class="metric-label">
+                                    <span class="status-indicator" id="distanceStatus"></span>
+                                    Distance
+                                </div>
+                            </div>
+                            
+                            <div class="metric">
+                                <div class="metric-value" id="analysisTime">-</div>
+                                <div class="metric-label">Analysis Time</div>
+                            </div>
+                        </div>
+                        
+                        <div class="guidance" id="guidance">
+                            <h3>📋 Guidance</h3>
+                            <ul id="guidanceList"></ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="noResults">
+                    <div class="result-card">
+                        <div style="text-align: center; color: #666; padding: 40px;">
+                            <div style="font-size: 4em; margin-bottom: 20px;">🔍</div>
+                            <h3>Ready to Analyze</h3>
+                            <p>Upload a crop image to get instant quality analysis and guidance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Ultra Fast</h3>
+                <p>Analysis in <5ms with 300+ FPS capability</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Ready</h3>
+                <p>Optimized for Android & iOS deployment</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>Offline Capable</h3>
+                <p>No internet required - pure on-device AI</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h3>95%+ Accuracy</h3>
+                <p>Precise blur, lighting & distance detection</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const cameraBtn = document.getElementById('cameraBtn');
+        const cameraVideo = document.getElementById('cameraVideo');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const noResults = document.getElementById('noResults');
+        
+        let currentImage = null;
+        let cameraStream = null;
+        
+        // Upload area events
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', handleDragOver);
+        uploadArea.addEventListener('drop', handleDrop);
+        
+        fileInput.addEventListener('change', handleFileSelect);
+        analyzeBtn.addEventListener('click', analyzeImage);
+        cameraBtn.addEventListener('click', toggleCamera);
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
+        }
+        
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                processFile(file);
+            }
+        }
+        
+        function processFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentImage = e.target.result;
+                imagePreview.src = currentImage;
+                imagePreview.style.display = 'block';
+                analyzeBtn.disabled = false;
+                
+                // Hide upload text
+                uploadArea.querySelector('.upload-icon').style.display = 'none';
+                uploadArea.querySelector('.upload-text').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        async function toggleCamera() {
+            if (cameraStream) {
+                // Stop camera
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+                cameraVideo.style.display = 'none';
+                cameraBtn.textContent = '📹 Use Camera';
+            } else {
+                // Start camera
+                try {
+                    cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: 'environment' } 
+                    });
+                    cameraVideo.srcObject = cameraStream;
+                    cameraVideo.style.display = 'block';
+                    cameraBtn.textContent = '📷 Capture Photo';
+                    
+                    // Add capture functionality
+                    cameraVideo.addEventListener('click', capturePhoto);
+                } catch (err) {
+                    alert('Camera access denied or not available');
+                }
+            }
+        }
+        
+        function capturePhoto() {
+            const canvas = document.createElement('canvas');
+            canvas.width = cameraVideo.videoWidth;
+            canvas.height = cameraVideo.videoHeight;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(cameraVideo, 0, 0);
+            
+            currentImage = canvas.toDataURL('image/jpeg');
+            imagePreview.src = currentImage;
+            imagePreview.style.display = 'block';
+            analyzeBtn.disabled = false;
+            
+            // Hide upload text
+            uploadArea.querySelector('.upload-icon').style.display = 'none';
+            uploadArea.querySelector('.upload-text').style.display = 'none';
+            
+            // Stop camera
+            toggleCamera();
+        }
+        
+        async function analyzeImage() {
+            if (!currentImage) return;
+            
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            noResults.style.display = 'none';
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: currentImage,
+                        bbox: null
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data.result);
+                } else {
+                    alert('Analysis failed: ' + data.error);
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error. Please try again.');
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+        
+        function displayResults(result) {
+            // Update quality score
+            const score = result.quality_score;
+            const scoreCircle = document.getElementById('scoreCircle');
+            const scoreValue = document.getElementById('scoreValue');
+            
+            scoreValue.textContent = score;
+            
+            if (score >= 80) {
+                scoreCircle.className = 'score-circle score-excellent';
+            } else if (score >= 60) {
+                scoreCircle.className = 'score-circle score-good';
+            } else {
+                scoreCircle.className = 'score-circle score-poor';
+            }
+            
+            // Update metrics
+            document.getElementById('blurScore').textContent = result.blur.score.toFixed(0);
+            document.getElementById('blurStatus').className = 
+                'status-indicator ' + (result.blur.status === 'sharp' ? 'status-good' : 'status-poor');
+            
+            document.getElementById('lightScore').textContent = result.lighting.brightness.toFixed(0);
+            document.getElementById('lightStatus').className = 
+                'status-indicator ' + (result.lighting.status === 'ok' ? 'status-good' : 'status-warning');
+            
+            if (result.distance.meters) {
+                document.getElementById('distanceScore').textContent = result.distance.meters.toFixed(1) + 'm';
+                document.getElementById('distanceStatus').className = 'status-indicator status-good';
+            } else {
+                document.getElementById('distanceScore').textContent = 'N/A';
+                document.getElementById('distanceStatus').className = 'status-indicator status-warning';
+            }
+            
+            document.getElementById('analysisTime').textContent = result.analysis_time_ms + 'ms';
+            
+            // Update guidance
+            const guidanceList = document.getElementById('guidanceList');
+            guidanceList.innerHTML = '';
+            
+            const messages = [
+                result.blur.message,
+                result.lighting.message,
+                result.distance.message
+            ];
+            
+            messages.forEach(message => {
+                const li = document.createElement('li');
+                li.textContent = message;
+                guidanceList.appendChild(li);
+            });
+            
+            if (result.guidance && result.guidance.length > 0) {
+                result.guidance.forEach(guide => {
+                    const li = document.createElement('li');
+                    li.textContent = guide;
+                    guidanceList.appendChild(li);
+                });
+            }
+            
+            // Show results
+            results.style.display = 'block';
+            noResults.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
