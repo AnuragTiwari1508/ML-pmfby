@@ -82,8 +82,8 @@ class PMFBYWebCapture:
         analysis_time = (time.time() - start_time) * 1000
         
         return {
-            'should_capture': should_capture,
-            'quality_score': min(quality_score, 100),
+            'should_capture': bool(should_capture),
+            'quality_score': int(min(quality_score, 100)),
             'blur': {
                 'score': float(blur_score),
                 'status': 'sharp' if blur_score > self.blur_threshold else 'blurry',
@@ -91,15 +91,15 @@ class PMFBYWebCapture:
             },
             'lighting': {
                 'brightness': float(brightness),
-                'status': light_status,
-                'message': light_message
+                'status': str(light_status),
+                'message': str(light_message)
             },
             'distance': {
                 'meters': float(distance) if distance else None,
-                'message': distance_message
+                'message': str(distance_message)
             },
-            'analysis_time_ms': round(analysis_time, 2),
-            'guidance': self._get_guidance(blur_score, light_ok, distance)
+            'analysis_time_ms': float(round(analysis_time, 2)),
+            'guidance': [str(g) for g in self._get_guidance(blur_score, light_ok, distance)]
         }
     
     def _get_guidance(self, blur_score, light_ok, distance):
