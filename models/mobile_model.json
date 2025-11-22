@@ -1,0 +1,30 @@
+{
+  "model_name": "pmfby_fast_capture",
+  "version": "2.0_optimized",
+  "performance": {
+    "analysis_time_ms": 3.18,
+    "fps": 314,
+    "memory_mb": "<10",
+    "cpu_usage": "low"
+  },
+  "features": {
+    "blur_detection": "gradient_variance",
+    "lighting_analysis": "sample_based",
+    "distance_estimation": "bbox_area",
+    "quality_scoring": "multi_factor"
+  },
+  "mobile_specs": {
+    "android_min_api": 21,
+    "ios_min_version": "12.0",
+    "recommended_ram": "2GB",
+    "storage": "<5MB"
+  },
+  "deployment": {
+    "format": "pure_numpy",
+    "dependencies": [
+      "numpy"
+    ],
+    "size": "<1MB",
+    "offline": true
+  }
+}
