@@ -70,14 +70,14 @@ class PMFBYWebCapture:
         
         # Overall quality
         quality_score = 0
-        if blur_score > self.blur_threshold:
+        if float(blur_score) > self.blur_threshold:
             quality_score += 40
-        if light_ok:
+        if bool(light_ok):
             quality_score += 40
-        if distance and 1.2 <= distance <= 1.8:
+        if distance and 1.2 <= float(distance) <= 1.8:
             quality_score += 20
         
-        should_capture = blur_score > self.blur_threshold and light_ok
+        should_capture = bool(float(blur_score) > self.blur_threshold and light_ok)
         
         analysis_time = (time.time() - start_time) * 1000
         
