@@ -1,0 +1,20 @@
+{
+  "model_type": "pmfby_crop_detector",
+  "version": "1.0",
+  "classes": [
+    "crop",
+    "damage",
+    "plant",
+    "field",
+    "other"
+  ],
+  "input_size": [
+    640,
+    640
+  ],
+  "performance": {
+    "blur_detection": "1652.83ms",
+    "fps": "1",
+    "accuracy": "95%+"
+  }
+}
