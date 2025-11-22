@@ -1,0 +1,83 @@
+# Smart Capture Configuration
+
+# Blur Detection
+blur:
+  threshold: 100.0              # Minimum acceptable blur score
+  warning_threshold: 150.0      # Warning threshold
+  frame_skip: 5                 # Process every N frames for real-time
+
+# Lighting Detection  
+lighting:
+  dark_threshold: 40            # Below this = too dark
+  overexposed_threshold: 220    # Above this = overexposed
+  overexposed_ratio_limit: 0.1  # Max % of overexposed pixels
+  underexposed_ratio_limit: 0.1 # Max % of underexposed pixels
+
+# Object Detection
+detection:
+  confidence: 0.5               # Minimum confidence threshold
+  iou_threshold: 0.45           # NMS IOU threshold
+  min_bbox_area: 10000          # Minimum bbox area (pixels²)
+  max_detections: 10            # Maximum detections per frame
+
+# Distance Estimation
+distance:
+  min_meters: 0.5               # Minimum acceptable distance
+  max_meters: 3.0               # Maximum acceptable distance
+  warning_tolerance: 0.3        # Warning range tolerance
+  calibration_constant: 50000   # Default calibration k value
+
+# Multi-angle Capture
+multi_angle:
+  enabled: true
+  num_captures: 3               # Number of angles to capture
+  angles: ['front', 'left', 'right']
+  min_angle_difference: 15      # Degrees
+
+# Geotag Validation
+geotag:
+  required: true
+  # India bounds (approximate) - customize per state/district
+  bounds:
+    min_lat: 8.0
+    max_lat: 35.0
+    min_lon: 68.0
+    max_lon: 97.0
+  max_distance_from_plot: 1.0   # km
+
+# Camera Settings
+camera:
+  resolution_width: 1280
+  resolution_height: 720
+  fps: 30
+  inference_fps: 5              # Run ML inference at this FPS
+
+# UI Settings
+ui:
+  show_guidance: true
+  show_overlay: true
+  show_fps: true
+  guidance_box_margin: 100      # Pixels from edge
+  font_scale: 0.6
+  line_thickness: 2
+
+# Storage
+storage:
+  save_format: 'jpg'
+  jpeg_quality: 95
+  save_metadata: true
+  metadata_format: 'json'
+
+# Model Paths
+models:
+  detector: 'models/yolov8_crop.pt'
+  detector_tflite: 'models/yolov8_crop.tflite'
+  calibration: 'models/calibration.json'
+
+# Classes
+classes:
+  - crop
+  - damage
+  - plant
+  - field
+  - insect
