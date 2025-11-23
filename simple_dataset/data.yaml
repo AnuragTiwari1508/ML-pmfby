@@ -1,0 +1,5 @@
+path: /workspaces/ML-pmfby/simple_dataset
+train: train/images
+val: val/images
+nc: 5
+names: ['healthy_crop', 'damaged_crop', 'pest_damage', 'disease', 'weed']

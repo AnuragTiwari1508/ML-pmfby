@@ -1,0 +1,26 @@
+# Essential Dependencies for PMFBY ML System
+# Minimal requirements for running the core system
+
+# Core ML & Computer Vision
+numpy>=1.21.0
+opencv-python>=4.5.0
+Pillow>=8.0.0
+
+# Deep Learning - YOLO
+torch>=1.11.0
+torchvision>=0.12.0
+ultralytics>=8.0.0
+
+# Data Processing & Visualization
+pandas>=1.3.0
+matplotlib>=3.5.0
+pyyaml>=6.0
+
+# Progress tracking
+tqdm>=4.60.0
+
+# Optional Enhanced Features (uncomment if needed):
+# scikit-learn>=1.0.0
+# seaborn>=0.11.0
+# flask>=2.0.0
+# plotly>=5.0.0

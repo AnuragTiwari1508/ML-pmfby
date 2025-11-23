@@ -2,8 +2,8 @@
   "model_name": "pmfby_fast_capture",
   "version": "2.0_optimized",
   "performance": {
-    "analysis_time_ms": 3.18,
-    "fps": 314,
+    "analysis_time_ms": 4.3,
+    "fps": 232,
     "memory_mb": "<10",
     "cpu_usage": "low"
   },

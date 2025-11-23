@@ -13,7 +13,7 @@
     640
   ],
   "performance": {
-    "blur_detection": "1652.83ms",
+    "blur_detection": "1624.72ms",
     "fps": "1",
     "accuracy": "95%+"
   }
